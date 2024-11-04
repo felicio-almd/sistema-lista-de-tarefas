@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^17.0.0",
+    "@iconify/react": "^5.0.2",
     "dotenv": "^16.4.5",
     "firebase": "^11.0.1",
     "next": "15.0.2",
@@ -16,6 +18,7 @@
     "react-dom": "19.0.0-rc-02c0e824-20241028"
   },
   "devDependencies": {
+    "@iconify-json/material-symbols": "^1.2.6",
     "@types/node": "22.8.6",
     "@types/react": "18.3.12",
     "eslint": "^8",
