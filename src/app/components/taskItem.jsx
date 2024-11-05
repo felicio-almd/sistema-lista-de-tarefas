@@ -97,8 +97,8 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                             </button>
                         </div>
                     ) : (
-                        <div className="flex gap-14 h-16 items-center max-lg:flex-col max-lg:items-center max-lg:h-12 max-lg:py-3">
-                            <h3 className="flex-1 break-words text-wrap line-clamp-2 truncate max-lg:break-words max-lg:w-full max-lg:text-center">{task.name}</h3>
+                        <div className="flex gap-14 h-16 items-center max-lg:h-12 max-lg:py-1">
+                            <h3 className="max-lg:text-sm lg:line-clamp-2 flex-1 max-lg:min-w-full max-lg:h-full max-lg:flex max-lg:items-center max-lg:justify-center"><span className="max-lg:line-clamp-2 max-lg:text-center">{task.name}</span></h3>
                             <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:hidden`}>Custo: R$ {task.cost}</p>
                             <p className="flex-1 max-lg:hidden">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                             {/* <p className="flex-1">Ordem de apresentação: {task.order}</p> */}
