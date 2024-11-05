@@ -53,26 +53,27 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className={`${task.cost >= 1000 ? "!bg-accent" : ""} task-item bg-white border border-gray-300 p-2 m-2 rounded`}
+                    className={`${task.cost >= 1000 ? "!bg-accent" : ""} bg-white dark:bg-bgBlack task-item border border-gray-300 px-4 py-1 m-2 rounded`}
+
                 >
                     {editingTask && editingTask.id === task.id ? (
                         <div className="flex gap-2">
                             <input
-                                className="border border-black px-2 py-1"
+                                className="border border-black px-2 py-1 flex-1"
                                 type="text"
                                 placeholder="Nome da tarefa"
                                 value={editingTaskName}
                                 onChange={(e) => setEditingTaskName(e.target.value)}
                             />
                             <input
-                                className="border border-black px-2 py-1"
+                                className="border border-black px-2 py-1 flex-1"
                                 type="number"
                                 placeholder="Custo (R$)"
                                 value={editingCost}
                                 onChange={(e) => setEditingCost(e.target.value)}
                             />
                             <input
-                                className="border border-black px-2 py-1"
+                                className="border border-black px-2 py-1 flex-1"
                                 type="date"
                                 placeholder="Data limite"
                                 value={editingDeadline}
@@ -92,13 +93,13 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                             </button>
                         </div>
                     ) : (
-                        <div className="flex gap-14">
-                            <h3 className="flex-1">{task.name}</h3>
-                            <p className={`${task.cost >= 1000 ? "font-bold text-red-700" : ""} flex-1`}>Custo: R$ {task.cost}</p>
-                            <p className="flex-1">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
-                            <p className="flex-1">Ordem de apresentação: {task.order}</p>
-                            <button onClick={() => startEditing(task)}><Icon icon="material-symbols:edit-square-outline-rounded" /></button>
-                            <button onClick={() => setTaskToDelete(task)}><Icon icon="material-symbols:delete-outline" /></button>
+                        <div className="flex gap-14 h-16 items-center max-lg:flex-col max-lg:items-center max-lg:h-12 max-lg:py-3">
+                            <h3 className="flex-1 break-words text-wrap truncate max-lg:break-words max-lg:w-full max-lg:text-center ">{task.name}</h3>
+                            <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:hidden`}>Custo: R$ {task.cost}</p>
+                            <p className="flex-1 max-lg:hidden">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                            {/* <p className="flex-1">Ordem de apresentação: {task.order}</p> */}
+                            <button className={`${task.cost >= 1000 ? "hover:text-black hover:bg-white" : ""} max-lg:hidden p-2 hover:bg-accent duration-200 rounded hover:text-white `} onClick={() => startEditing(task)}><Icon className="text-3xl" icon="material-symbols:edit-square-outline-rounded" /></button>
+                            <button className="p-2 hover:bg-red-600 duration-200 rounded hover:text-white max-lg:hidden" onClick={() => setTaskToDelete(task)}><Icon className="text-3xl" icon="material-symbols:delete-outline" /></button>
                         </div>
                     )}
                 </div>

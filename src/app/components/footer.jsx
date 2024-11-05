@@ -7,7 +7,7 @@ export default function Footer() {
             <Link
                 href="https://github.com/felicio-almd"
                 target="_blank"
-                className="rounded-lg p-2 text-lg flex items-center justify-center gap-2 text-black h-full hover:bg-blue-500 transition-all"
+                className="rounded-lg p-2 text-lg flex items-center justify-center gap-2 h-full hover:bg-accent transition-all"
             >
                 <Icon icon="mdi:github" width="32" height="32" />
                 <p>github</p>
@@ -16,7 +16,7 @@ export default function Footer() {
             <Link
                 href="https://www.linkedin.com/in/felicio-rodney-almeida-rocha/"
                 target="_blank"
-                className="rounded-lg p-1 text-lg flex items-center justify-center text-black h-full hover:bg-blue-500 transition-all"
+                className="rounded-lg p-1 text-lg flex items-center justify-center h-full hover:bg-accent transition-all"
             >
                 © felicio.almd
             </Link>

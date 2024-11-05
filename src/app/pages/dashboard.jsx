@@ -122,15 +122,37 @@ export default function Welcome() {
         });
     }, []);
 
+    const dataAtual = new Date();
+    const diaAtual = dataAtual.toLocaleDateString('pt-BR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+    });
+    const horas = dataAtual.getHours();
+    let saudacao;
+    if (horas < 12) {
+        saudacao = 'Bom dia!';
+    } else if (horas < 18) {
+        saudacao = 'Boa tarde!';
+    } else {
+        saudacao = 'Boa noite!';
+    }
+
+
     return (
-        <div className="h-screen flex flex-col justify-between">
-            <Header>
+        <div className="h-screen flex flex-col justify-between items-center">
+            <Header title={saudacao}>
                 <ThemeToggle />
             </Header>
-            <main className="w-full flex items-center justify-center flex-col">
-                <div className="flex border border-black p-4 space-x-2">
+            <main className="max-lg:max-w-xs max-w-screen-xl lg:w-full flex items-center justify-center flex-col px-2">
+                <div className="w-full py-6 text-lg">
+                    <p>Bem-vindo de volta à sua lista de tarefas</p>
+                    <p className="font-semibold">{diaAtual}</p>
+                    <p>O que deseja fazer?</p>
+                </div>
+                <div className="max-lg:flex-col flex w-full border-2 border-primary p-3 bg-white lg:space-x-2 rounded-lg justify-between m-1 max-lg:gap-3">
                     <input
-                        className="border border-black"
+                        className="border border-black dark:bg-white dark:text-primary flex-1 rounded border-none px-2 py-2 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary shadow-md"
                         type="text"
                         placeholder="Nome da tarefa"
                         value={taskName}
@@ -139,23 +161,26 @@ export default function Welcome() {
                     <input
                         onBlur={(e) => (e.target.value < 0 ? setCost(0) : cost)}
                         min={0}
-                        className="border border-black"
+                        className="border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-primary
+                        focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary
+                        [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         type="number"
                         placeholder="Custo (R$)"
                         value={cost}
                         onChange={(e) => setCost(e.target.value)}
                     />
                     <input
-                        className="border border-black"
+                        className="border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-black
+                        focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary"
                         type="date"
                         placeholder="Data limite"
                         value={deadline}
                         onChange={(e) => setDeadline(e.target.value)}
                     />
-                    <button onClick={storeTask}>Adicionar Tarefa</button>
+                    <button onClick={storeTask} className="flex-1 dark:bg-white dark:text-black shadow-md hover:text-white hover:bg-accent rounded transition-all duration-300 max-lg:py-2">Adicionar Tarefa</button>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 w-full ">
                     <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                         <Droppable droppableId="tasks" type="list" direction="vertical">
                             {(provided) => (
