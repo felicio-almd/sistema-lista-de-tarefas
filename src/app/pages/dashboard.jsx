@@ -18,16 +18,19 @@ export default function Welcome() {
     const [taskToDelete, setTaskToDelete] = useState(null);
 
     const [isDragging, setIsDragging] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [showReorderErrorModal, setShowReorderErrorModal] = useState(false);
+    const [showTaskExistsModal, setShowTaskExistsModal] = useState(false);
 
     const storeTask = async () => {
         if (!taskName.trim() || !cost || !deadline) {
-            alert("Preencha todos os campos obrigatórios.");
+            setShowErrorModal(true);
             return;
         }
 
         const taskExists = tasks.some((t) => t.name === taskName);
         if (taskExists) {
-            alert("Uma tarefa com este nome já existe. Escolha outro.");
+            setShowTaskExistsModal(true)
             return;
         }
 
@@ -60,7 +63,7 @@ export default function Welcome() {
 
             await update(ref(db), updates);
         } catch (error) {
-            alert("Erro ao reordenar tarefas");
+            setShowReorderErrorModal(true);
         }
     };
 
@@ -138,7 +141,6 @@ export default function Welcome() {
         saudacao = 'Boa noite!';
     }
 
-
     return (
         <div className="h-screen flex flex-col justify-between items-center">
             <Header title={saudacao}>
@@ -152,7 +154,8 @@ export default function Welcome() {
                 </div>
                 <div className="max-lg:flex-col flex w-full border-2 border-primary p-3 bg-white lg:space-x-2 rounded-lg justify-between m-1 max-lg:gap-3">
                     <input
-                        className="border border-black dark:bg-white dark:text-primary flex-1 rounded border-none px-2 py-2 focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary shadow-md"
+                        className="border border-black dark:bg-white dark:text-primary flex-1 rounded border-none px-2 py-2 focus:outline-none 
+                        focus:border-secondary focus:ring-2 focus:ring-secondary shadow-md"
                         type="text"
                         placeholder="Nome da tarefa"
                         value={taskName}
@@ -201,9 +204,11 @@ export default function Welcome() {
                     </DragDropContext>
                 </div>
 
+                {/* Area dos modals */}
+
                 {taskToDelete && (
                     <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-4 rounded shadow-lg">
+                        <div className="bg-white p-4 rounded shadow-lg text-black">
                             <h2>Confirmar exclusão de Tarefa</h2>
                             <p>Tem certeza que deseja excluir a tarefa "{taskToDelete.name}"? </p>
                             <div className="flex space-x-2 mt-4">
@@ -212,6 +217,57 @@ export default function Welcome() {
                                 </button>
                                 <button onClick={() => setTaskToDelete(null)} className="bg-gray-300 px-4 py-2 rounded">
                                     Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {showErrorModal && (
+                    <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-4 rounded shadow-lg text-black">
+                            <h2>Erro ao criar tarefa</h2>
+                            <p>Preencha todos os campos obrigatórios antes de continuar.</p>
+                            <div className="flex justify-end mt-4">
+                                <button
+                                    onClick={() => setShowErrorModal(false)}
+                                    className="bg-gray-300 px-4 py-2 rounded"
+                                >
+                                    OK
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {showReorderErrorModal && (
+                    <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-4 rounded shadow-lg text-black">
+                            <h2>Erro</h2>
+                            <p>Erro ao reordenar tarefas.</p>
+                            <div className="flex justify-end mt-4">
+                                <button
+                                    onClick={() => setShowReorderErrorModal(false)}
+                                    className="bg-gray-300 px-4 py-2 rounded"
+                                >
+                                    OK
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {showTaskExistsModal && (
+                    <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-4 rounded shadow-lg text-black">
+                            <h2>Tarefa já existe</h2>
+                            <p>Uma tarefa com esse nome já foi criada. Por favor, escolha um nome diferente.</p>
+                            <div className="flex justify-end mt-4">
+                                <button
+                                    onClick={() => setShowTaskExistsModal(false)}
+                                    className="bg-gray-300 px-4 py-2 rounded"
+                                >
+                                    OK
                                 </button>
                             </div>
                         </div>

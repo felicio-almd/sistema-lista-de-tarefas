@@ -57,23 +57,27 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
 
                 >
                     {editingTask && editingTask.id === task.id ? (
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 p-3">
                             <input
-                                className="border border-black px-2 py-1 flex-1"
+                                className="border border-black dark:bg-white dark:text-primary flex-1 rounded border-none px-2 py-2 focus:outline-none 
+                                focus:border-secondary focus:ring-2 focus:ring-secondary shadow-md"
                                 type="text"
                                 placeholder="Nome da tarefa"
                                 value={editingTaskName}
                                 onChange={(e) => setEditingTaskName(e.target.value)}
                             />
                             <input
-                                className="border border-black px-2 py-1 flex-1"
+                                className="border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-primary
+                                focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary
+                                [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 type="number"
                                 placeholder="Custo (R$)"
                                 value={editingCost}
                                 onChange={(e) => setEditingCost(e.target.value)}
                             />
                             <input
-                                className="border border-black px-2 py-1 flex-1"
+                                className="border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-black
+                                focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary"
                                 type="date"
                                 placeholder="Data limite"
                                 value={editingDeadline}
@@ -94,12 +98,14 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                         </div>
                     ) : (
                         <div className="flex gap-14 h-16 items-center max-lg:flex-col max-lg:items-center max-lg:h-12 max-lg:py-3">
-                            <h3 className="flex-1 break-words text-wrap truncate max-lg:break-words max-lg:w-full max-lg:text-center ">{task.name}</h3>
+                            <h3 className="flex-1 break-words text-wrap line-clamp-2 truncate max-lg:break-words max-lg:w-full max-lg:text-center">{task.name}</h3>
                             <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:hidden`}>Custo: R$ {task.cost}</p>
                             <p className="flex-1 max-lg:hidden">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                             {/* <p className="flex-1">Ordem de apresentação: {task.order}</p> */}
-                            <button className={`${task.cost >= 1000 ? "hover:text-black hover:bg-white" : ""} max-lg:hidden p-2 hover:bg-accent duration-200 rounded hover:text-white `} onClick={() => startEditing(task)}><Icon className="text-3xl" icon="material-symbols:edit-square-outline-rounded" /></button>
-                            <button className="p-2 hover:bg-red-600 duration-200 rounded hover:text-white max-lg:hidden" onClick={() => setTaskToDelete(task)}><Icon className="text-3xl" icon="material-symbols:delete-outline" /></button>
+                            <div className="flex gap-2">
+                                <button className={`${task.cost >= 1000 ? "hover:text-black hover:bg-white" : ""} max-lg:hidden p-2 hover:bg-accent duration-200 rounded hover:text-white `} onClick={() => startEditing(task)}><Icon className="text-3xl" icon="material-symbols:edit-square-outline-rounded" /></button>
+                                <button className="p-2 hover:bg-red-600 duration-200 rounded hover:text-white max-lg:hidden" onClick={() => setTaskToDelete(task)}><Icon className="text-3xl" icon="material-symbols:delete-outline" /></button>
+                            </div>
                         </div>
                     )}
                 </div>
