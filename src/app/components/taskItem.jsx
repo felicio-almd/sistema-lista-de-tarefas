@@ -53,7 +53,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                    className={`${task.cost >= 1000 ? "!bg-teal-600" : ""} task-item bg-slate-400 border border-gray-300 p-2 m-2 rounded`}
+                    className={`${task.cost >= 1000 ? "!bg-accent" : ""} task-item bg-white border border-gray-300 p-2 m-2 rounded`}
                 >
                     {editingTask && editingTask.id === task.id ? (
                         <div className="flex gap-2">
@@ -95,7 +95,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                         <div className="flex gap-14">
                             <h3 className="flex-1">{task.name}</h3>
                             <p className={`${task.cost >= 1000 ? "font-bold text-red-700" : ""} flex-1`}>Custo: R$ {task.cost}</p>
-                            <p className="flex-1">Data limite: {task.deadline}</p>
+                            <p className="flex-1">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                             <p className="flex-1">Ordem de apresentação: {task.order}</p>
                             <button onClick={() => startEditing(task)}><Icon icon="material-symbols:edit-square-outline-rounded" /></button>
                             <button onClick={() => setTaskToDelete(task)}><Icon icon="material-symbols:delete-outline" /></button>

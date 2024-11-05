@@ -14,8 +14,9 @@
     "dotenv": "^16.4.5",
     "firebase": "^11.0.1",
     "next": "15.0.2",
+    "next-themes": "^0.4.3",
     "react": "19.0.0-rc-02c0e824-20241028",
-    "react-dom": "19.0.0-rc-02c0e824-20241028"
+    "react-dom": "^19.0.0-rc-02c0e824-20241028"
   },
   "devDependencies": {
     "@iconify-json/material-symbols": "^1.2.6",

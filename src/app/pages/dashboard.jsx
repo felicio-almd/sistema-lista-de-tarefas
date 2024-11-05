@@ -1,10 +1,14 @@
-"use client";
-import { useState, useEffect } from "react";
+"use client"
+import { createContext, useState, useEffect } from "react";
 import { db } from "../firebase";
 import { ref, push, set, onValue, update, remove } from "firebase/database";
 import Footer from "../components/footer";
 import TaskItem from "../components/taskItem";
+import Header from "../components/header";
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
+import ThemeToggle from "../components/toggle";
+
+export const ThemeContext = createContext(null);
 
 export default function Welcome() {
     const [tasks, setTasks] = useState([]);
@@ -119,10 +123,11 @@ export default function Welcome() {
     }, []);
 
     return (
-        <>
-            <main className="w-full h-screen flex items-center justify-center flex-col">
-                <h1>Sistema lista de Tarefas</h1>
-
+        <div className="h-screen flex flex-col justify-between">
+            <Header>
+                <ThemeToggle />
+            </Header>
+            <main className="w-full flex items-center justify-center flex-col">
                 <div className="flex border border-black p-4 space-x-2">
                     <input
                         className="border border-black"
@@ -189,6 +194,6 @@ export default function Welcome() {
                 )}
             </main >
             <Footer />
-        </>
+        </div>
     );
 }

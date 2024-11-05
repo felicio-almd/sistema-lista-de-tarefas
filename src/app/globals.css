@@ -3,12 +3,22 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #E3EDF9;
+  --text-primary: #171717;
+  --primary: #689ed4;
+  --secondary: #d9f5fc;
+  --accent: #4487ca;
+
+  --background-black: #08121c;
+  --text-black: #ffffff;
+  --primary-black: #2b6197;
+  --secondary-black: #031f26;
+  --accent-black: #3578bb;
 }
 
 
 body {
-  color: var(--foreground);
+  color: var(--text-primary);
   background: var(--background);
+  @apply bg-background dark:bg-bgBlack text-textPrimary dark:text-textBlack transition-colors;
 }
