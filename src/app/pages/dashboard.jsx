@@ -13,6 +13,8 @@ export default function Welcome() {
     const [deadline, setDeadline] = useState("");
     const [taskToDelete, setTaskToDelete] = useState(null);
 
+    const [isDragging, setIsDragging] = useState(false);
+
     const storeTask = async () => {
         if (!taskName.trim() || !cost || !deadline) {
             alert("Preencha todos os campos obrigatórios.");
@@ -37,7 +39,7 @@ export default function Welcome() {
         });
 
         setTaskName("");
-        setCost("");
+        setCost(0);
         setDeadline("");
     };
 
@@ -67,9 +69,12 @@ export default function Welcome() {
             await reorderTasks(remainingTasks);
 
             setTaskToDelete(null);
-            Alert("Tarefa deletada com sucesso");
         }
     };
+
+    const onDragStart = () => {
+        setIsDragging(true)
+    }
 
     const onDragEnd = async (result) => {
         if (!result.destination) return;
@@ -91,6 +96,7 @@ export default function Welcome() {
         if (Object.keys(updates).length > 0) {
             await update(ref(db), updates);
         }
+        setIsDragging(false);
     };
 
     useEffect(() => {
@@ -117,27 +123,6 @@ export default function Welcome() {
             <main className="w-full h-screen flex items-center justify-center flex-col">
                 <h1>Sistema lista de Tarefas</h1>
 
-                <div className="mt-4">
-                    <DragDropContext onDragEnd={onDragEnd}>
-                        <Droppable droppableId="tasks" type="list" direction="vertical">
-                            {(provided) => (
-                                <article className="border border-blue-500" ref={provided.innerRef} {...provided.droppableProps}>
-                                    {tasks.map((task, index) => (
-                                        <TaskItem
-                                            key={`${task.id}-${index}`}
-                                            index={index}
-                                            task={task}
-                                            tasks={tasks}
-                                            setTaskToDelete={setTaskToDelete}
-                                        />
-                                    ))}
-                                    {provided.placeholder}
-                                </article>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
-                </div>
-
                 <div className="flex border border-black p-4 space-x-2">
                     <input
                         className="border border-black"
@@ -147,6 +132,8 @@ export default function Welcome() {
                         onChange={(e) => setTaskName(e.target.value)}
                     />
                     <input
+                        onBlur={(e) => (e.target.value < 0 ? setCost(0) : cost)}
+                        min={0}
                         className="border border-black"
                         type="number"
                         placeholder="Custo (R$)"
@@ -161,6 +148,27 @@ export default function Welcome() {
                         onChange={(e) => setDeadline(e.target.value)}
                     />
                     <button onClick={storeTask}>Adicionar Tarefa</button>
+                </div>
+
+                <div className="mt-4">
+                    <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+                        <Droppable droppableId="tasks" type="list" direction="vertical">
+                            {(provided) => (
+                                <article className={`${isDragging ? 'border-2  border-blue-200' : 'border-2 border-blue-200/0'} rounded-lg transition-all border-dashed`} ref={provided.innerRef} {...provided.droppableProps}>
+                                    {tasks.map((task, index) => (
+                                        <TaskItem
+                                            key={`${task.id}-${index}`}
+                                            index={index}
+                                            task={task}
+                                            tasks={tasks}
+                                            setTaskToDelete={setTaskToDelete}
+                                        />
+                                    ))}
+                                    {provided.placeholder}
+                                </article>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
                 </div>
 
                 {taskToDelete && (
@@ -179,7 +187,7 @@ export default function Welcome() {
                         </div>
                     </div>
                 )}
-            </main>
+            </main >
             <Footer />
         </>
     );

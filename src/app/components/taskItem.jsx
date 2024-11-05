@@ -93,10 +93,10 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                         </div>
                     ) : (
                         <div className="flex gap-14">
-                            <h3>{task.name}</h3>
-                            <p className={`${task.cost >= 1000 ? "font-bold text-red-700" : ""}`}>Custo: R$ {task.cost}</p>
-                            <p>Data limite: {task.deadline}</p>
-                            <p>Ordem de apresentação: {task.order}</p>
+                            <h3 className="flex-1">{task.name}</h3>
+                            <p className={`${task.cost >= 1000 ? "font-bold text-red-700" : ""} flex-1`}>Custo: R$ {task.cost}</p>
+                            <p className="flex-1">Data limite: {task.deadline}</p>
+                            <p className="flex-1">Ordem de apresentação: {task.order}</p>
                             <button onClick={() => startEditing(task)}><Icon icon="material-symbols:edit-square-outline-rounded" /></button>
                             <button onClick={() => setTaskToDelete(task)}><Icon icon="material-symbols:delete-outline" /></button>
                         </div>
