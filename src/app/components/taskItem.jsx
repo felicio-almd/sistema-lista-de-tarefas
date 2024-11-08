@@ -103,7 +103,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                             <p className="flex-1 max-lg:hidden">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                             {/* <p className="flex-1">Ordem de apresentação: {task.order}</p> */}
                             <div className="flex gap-2">
-                                <button className={`${task.cost >= 1000 ? "hover:text-black hover:bg-white" : ""} max-lg:hidden p-2 hover:bg-accent duration-200 rounded hover:text-white `} onClick={() => startEditing(task)}><Icon className="text-3xl" icon="material-symbols:edit-square-outline-rounded" /></button>
+                                <button className={`${task.cost >= 1000 ? "hover:text-black hover:bg-white dark:hover:text-black" : "hover:text-white"} rounded max-lg:hidden p-2 hover:bg-accent duration-200 `} onClick={() => startEditing(task)}><Icon className="text-3xl" icon="material-symbols:edit-square-outline-rounded" /></button>
                                 <button className="p-2 hover:bg-red-600 duration-200 rounded hover:text-white max-lg:hidden" onClick={() => setTaskToDelete(task)}><Icon className="text-3xl" icon="material-symbols:delete-outline" /></button>
                             </div>
                         </div>
