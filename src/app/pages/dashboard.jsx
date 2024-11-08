@@ -152,7 +152,7 @@ export default function Welcome() {
                     <p className="font-semibold">{diaAtual}</p>
                     <p>O que deseja fazer?</p>
                 </div>
-                <div className="max-lg:flex-col flex w-full border-2 border-primary p-3 bg-white lg:space-x-2 rounded-lg justify-between m-1 max-lg:gap-3">
+                <div className="max-lg:flex-col flex w-full border-2 border-primary p-3 bg-white dark:bg-bgBlack lg:space-x-2 rounded-lg justify-between m-1 max-lg:gap-3">
                     <input
                         className="border border-black dark:bg-white dark:text-primary flex-1 rounded border-none px-2 py-2 focus:outline-none 
                         focus:border-secondary focus:ring-2 focus:ring-secondary shadow-md"
@@ -180,7 +180,7 @@ export default function Welcome() {
                         value={deadline}
                         onChange={(e) => setDeadline(e.target.value)}
                     />
-                    <button onClick={storeTask} className="flex-1 dark:bg-white dark:text-black shadow-md hover:text-white hover:bg-accent rounded transition-all duration-300 max-lg:py-2">Adicionar Tarefa</button>
+                    <button onClick={storeTask} className="flex-1 dark:bg-white dark:text-black shadow-md hover:text-white hover:bg-accent dark:hover:bg-accent rounded transition-all duration-300 max-lg:py-2">Adicionar Tarefa</button>
                 </div>
 
                 <div className="mt-4 w-full ">
