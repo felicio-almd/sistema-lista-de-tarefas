@@ -1,17 +1,15 @@
 'use client'
 import { ThemeProvider } from "next-themes";
 import Login from "./login";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   getAuth,
   GithubAuthProvider,
-  signInWithPopup,
-  signInWithRedirect,
   getRedirectResult
 } from "firebase/auth";
 import Dashboard from "./dashboard";
-import { app } from "./firebase.js"; // Certifique-se que este arquivo existe
+import app from "../firebase/firebase";
+import { TasksProvider } from "../hooks/useTasks";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -60,7 +58,9 @@ export default function Home() {
       )}
 
       {user ? (
-        <Dashboard />
+        <TasksProvider>
+          <Dashboard />
+        </TasksProvider >
       ) : (
         <Login />
       )}

@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
-import { ref, update } from "firebase/database";
-import { db } from "../firebase";
 import { Draggable } from "@hello-pangea/dnd";
+import { useTasks } from "../hooks/useTasks";
 
 export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
     const [editingTask, setEditingTask] = useState(null);
     const [editingTaskName, setEditingTaskName] = useState("");
     const [editingCost, setEditingCost] = useState("");
     const [editingDeadline, setEditingDeadline] = useState("");
+
+    const { updateTask } = useTasks();
 
     const startEditing = (taskToEdit) => {
         setEditingTask(taskToEdit);
@@ -17,7 +18,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
         setEditingDeadline(taskToEdit.deadline);
     };
 
-    const updateTask = async () => {
+    const updateInputTask = async () => {
         if (!editingTaskName.trim()) {
             alert("A tarefa precisa de um nome.");
             return;
@@ -32,13 +33,15 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
             return;
         }
 
-        const taskRef = ref(db, `tasks/${editingTask.id}`);
-        await update(taskRef, {
+        const taskInput = {
+            id: editingTask.id,
             name: editingTaskName,
             cost: parseFloat(editingCost),
             deadline: editingDeadline,
-            order: editingTask.order,
-        });
+            order: task.order,
+        };
+
+        await updateTask(editingTask.id, taskInput);
 
         setEditingTask(null);
         setEditingTaskName("");
@@ -54,7 +57,6 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     className={`${task.cost >= 1000 ? "!bg-accent" : ""} bg-white dark:bg-bgBlack task-item border border-gray-300 px-4 py-1 m-2 rounded`}
-
                 >
                     {editingTask && editingTask.id === task.id ? (
                         <div className="flex gap-2 p-3">
@@ -84,7 +86,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                                 onChange={(e) => setEditingDeadline(e.target.value)}
                             />
                             <button
-                                onClick={updateTask}
+                                onClick={updateInputTask}
                                 className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
                             >
                                 Salvar
