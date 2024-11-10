@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, writeBatch } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useAuthContext } from "../context/AuthContext";
 
@@ -14,7 +14,8 @@ export function TasksProvider({ children }) {
             if (!userAuth) return;
 
             const userTasksRef = collection(firestore, "users", userAuth.uid, "tasks");
-            const querySnapshot = await getDocs(userTasksRef);
+            const tasksQuery = query(userTasksRef, orderBy("order"));
+            const querySnapshot = await getDocs(tasksQuery);
             const loadedTasks = [];
             querySnapshot.forEach((doc) => {
                 loadedTasks.push({ id: doc.id, ...doc.data() });
@@ -57,8 +58,33 @@ export function TasksProvider({ children }) {
         }
     }
 
+    async function updateTask(id, updatedData) {
+        if (!userAuth) return;
+
+        try {
+            const taskDocRef = doc(firestore, "users", userAuth.uid, "tasks", id);
+
+            const updateData = {
+                ...updatedData,
+                updatedAt: new Date().toISOString(),
+            };
+
+            await updateDoc(taskDocRef, updateData);
+
+            setTasks(prevTasks =>
+                prevTasks.map(task =>
+                    task.id === id
+                        ? { ...task, ...updateData }
+                        : task
+                )
+            );
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return (
-        <TasksContext.Provider value={{ tasks, createTask, deleteTask }}>
+        <TasksContext.Provider value={{ tasks, createTask, deleteTask, updateTask, setTasks }}>
             {children}
         </TasksContext.Provider>
     );

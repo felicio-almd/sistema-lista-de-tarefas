@@ -8,7 +8,7 @@ import {
   getRedirectResult
 } from "firebase/auth";
 import Dashboard from "./dashboard";
-import { app } from "../firebase/firebase.js";
+import app from "../firebase/firebase";
 import { TasksProvider } from "../hooks/useTasks";
 
 export default function Home() {

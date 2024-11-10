@@ -40,7 +40,7 @@ export const AuthContextProvider = ({
                 ?
                 <div className="flex items-center gap-8 justify-center min-h-screen bg-gray-100">
                     <div className="text-4xl spinner mr-4"></div>
-                    <h1 className="text-4xl font-bold text-gray-700">Caregando...</h1>
+                    <h1 className="text-4xl font-bold text-gray-700">Carregando...</h1>
                 </div>
                 :
                 children
