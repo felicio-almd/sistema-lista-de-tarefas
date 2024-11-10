@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { ref, update } from "firebase/database";
-import { db } from "../firebase";
+import { db } from "../firebase/firebase";
 import { Draggable } from "@hello-pangea/dnd";
 
 export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
