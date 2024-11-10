@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import { createContext, useState, useEffect } from "react";
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { Icon } from "@iconify/react";
@@ -213,7 +213,7 @@ export default function Dashboard() {
                     <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                         <div className="bg-white p-4 rounded shadow-lg text-black">
                             <h2>Confirmar exclusão de Tarefa</h2>
-                            <p>Tem certeza que deseja excluir a tarefa "{taskToDelete.name}"?</p>
+                            <p>Tem certeza que deseja excluir a tarefa {taskToDelete.name}?</p>
                             <div className="flex space-x-2 mt-4">
                                 <button onClick={handleDeleteTask} className="bg-red-500 text-white px-4 py-2 rounded">
                                     Confirmar
