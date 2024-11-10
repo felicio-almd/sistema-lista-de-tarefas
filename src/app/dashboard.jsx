@@ -1,16 +1,19 @@
 "use client"
 import { createContext, useState, useEffect } from "react";
-import { db } from "../firebase";
+import { app, db } from "./firebase";
 import { ref, push, set, onValue, update, remove } from "firebase/database";
-import Footer from "../components/footer";
-import TaskItem from "../components/taskItem";
-import Header from "../components/header";
+import Footer from "./components/footer";
+import TaskItem from "./components/taskItem";
+import Header from "./components/header";
 import { DragDropContext, Droppable } from '@hello-pangea/dnd'
-import ThemeToggle from "../components/toggle";
+import ThemeToggle from "./components/toggle";
+import { getAuth } from "firebase/auth";
+import { Icon } from "@iconify/react";
 
 export const ThemeContext = createContext(null);
 
-export default function Welcome() {
+export default function Dashboard() {
+    const [user, setUser] = useState()
     const [tasks, setTasks] = useState([]);
     const [taskName, setTaskName] = useState("");
     const [cost, setCost] = useState("");
@@ -123,6 +126,16 @@ export default function Welcome() {
                 setTasks([]);
             }
         });
+
+        const auth = getAuth(app);
+
+        const userName = auth.onAuthStateChanged((user) => {
+            if (user) {
+                setUser(user);
+            } else {
+                setUser(null);
+            }
+        });
     }, []);
 
     const dataAtual = new Date();
@@ -134,17 +147,33 @@ export default function Welcome() {
     const horas = dataAtual.getHours();
     let saudacao;
     if (horas < 12) {
-        saudacao = 'Bom dia!';
+        saudacao = `Bom dia ${user?.displayName}!`;
     } else if (horas < 18) {
-        saudacao = 'Boa tarde!';
+        saudacao = `Boa tarde ${user?.displayName}!`;
     } else {
-        saudacao = 'Boa noite!';
+        saudacao = `Boa noite ${user?.displayName}!`;
     }
+
+
+    const signOut = async () => {
+        const auth = getAuth(app);
+        try {
+            await auth.signOut();
+        } catch (error) {
+            console.error("Sign-out Error:", error);
+        }
+    };
 
     return (
         <div className="h-screen flex flex-col justify-between items-center">
             <Header title={saudacao}>
                 <ThemeToggle />
+                <button
+                    onClick={signOut}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    <Icon icon="material-symbols:arrow-back-rounded"></Icon>
+                </button>
             </Header>
             <main className="max-lg:max-w-xs max-w-screen-xl lg:w-full flex items-center justify-center flex-col px-2">
                 <div className="w-full py-6 text-lg">
