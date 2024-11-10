@@ -131,13 +131,15 @@ export default function Dashboard() {
     return (
         <div className="h-screen justify-between flex flex-col items-center">
             <Header title={saudacao}>
-                <ThemeToggle />
-                <button
-                    onClick={signOut}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                >
-                    <Icon icon="material-symbols:arrow-back-rounded"></Icon>
-                </button>
+                <div className="h-full flex gap-10">
+                    <ThemeToggle />
+                    <button
+                        onClick={signOut}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all"
+                    >
+                        <Icon icon="material-symbols:arrow-back-rounded"></Icon>
+                    </button>
+                </div>
             </Header>
             <main className="max-lg:max-w-xs max-w-screen-xl lg:w-full flex items-center justify-center flex-col px-2">
                 <div className="w-full py-6 text-lg">
