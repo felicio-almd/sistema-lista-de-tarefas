@@ -168,7 +168,7 @@ export default function Dashboard() {
                         onChange={(e) => setCost(e.target.value)}
                     />
                     <input
-                        className="border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-black
+                        className="w-full border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-black
                             focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary"
                         type="date"
                         placeholder="Data limite"

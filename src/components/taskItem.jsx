@@ -99,14 +99,14 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                             </button>
                         </div>
                     ) : (
-                        <div className="flex gap-14 h-16 items-center max-lg:h-12 max-lg:py-1">
-                            <h3 className="max-lg:text-sm lg:line-clamp-2 flex-1 max-lg:min-w-full max-lg:h-full max-lg:flex max-lg:items-center max-lg:justify-center"><span className="max-lg:line-clamp-2 max-lg:text-center">{task.name}</span></h3>
-                            <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:hidden`}>Custo: R$ {task.cost}</p>
-                            <p className="flex-1 max-lg:hidden">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                        <div className="flex max-lg:flex-col lg:gap-14 h-16 items-center max-lg:h-32 max-lg:py-1">
+                            <h3 className="max-lg:text-sm lg:line-clamp-2 flex-1 max-lg:min-w-full max-lg:h-full max-lg:flex max-lg:items-center max-lg:justify-center max-lg:p-2"><span className="max-lg:line-clamp-2 max-lg:text-center">{task.name}</span></h3>
+                            <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:text-sm`}>Custo: R$ {task.cost}</p>
+                            <p className="flex-1 max-lg:hidden max-lg:text-sm">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                             {/* <p className="flex-1">Ordem de apresentação: {task.order}</p> */}
                             <div className="flex gap-2">
-                                <button className={`${task.cost >= 1000 ? "hover:text-black hover:bg-white dark:hover:text-black" : "hover:text-white"} rounded max-lg:hidden p-2 hover:bg-accent duration-200 `} onClick={() => startEditing(task)}><Icon className="text-3xl" icon="material-symbols:edit-square-outline-rounded" /></button>
-                                <button className="p-2 hover:bg-red-600 duration-200 rounded hover:text-white max-lg:hidden" onClick={() => setTaskToDelete(task)}><Icon className="text-3xl" icon="material-symbols:delete-outline" /></button>
+                                <button className={`${task.cost >= 1000 ? "hover:text-black hover:bg-white dark:hover:text-black" : "hover:text-white"} rounded max-lg:hidden  p-2 hover:bg-accent duration-200 `} onClick={() => startEditing(task)}><Icon className="max-lg:text-xl text-3xl" icon="material-symbols:edit-square-outline-rounded" /></button>
+                                <button className="p-2 hover:bg-red-600 duration-200 rounded hover:text-white max-lg:" onClick={() => setTaskToDelete(task)}><Icon className="text-3xl max-lg:text-xl " icon="material-symbols:delete-outline" /></button>
                             </div>
                         </div>
                     )}
