@@ -1,5 +1,5 @@
-"use client"
-import { createContext, useState, useEffect } from "react";
+'use client'
+import { createContext, useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { Icon } from "@iconify/react";
 import app from "../firebase/firebase";
@@ -25,13 +25,18 @@ export default function Dashboard() {
     const [showReorderErrorModal, setShowReorderErrorModal] = useState(false);
     const [showTaskExistsModal, setShowTaskExistsModal] = useState(false);
 
+    const textInput = useRef(null);
+    const modalRef = useRef(null);
+
     const storeTask = async () => {
-        if (!taskName.trim() || !cost || !deadline) {
+        const trimmedTaskName = taskName.trimEnd();
+
+        if (!trimmedTaskName || !cost || !deadline) {
             setShowErrorModal(true);
             return;
         }
 
-        const taskExists = tasks.some((t) => t.name === taskName);
+        const taskExists = tasks.some((t) => t.name === trimmedTaskName);
         if (taskExists) {
             setShowTaskExistsModal(true);
             return;
@@ -40,8 +45,8 @@ export default function Dashboard() {
         const order = tasks.length ? Math.max(...tasks.map(t => t.order)) + 1 : 1;
 
         const taskInput = {
-            name: taskName,
-            cost: parseFloat(cost),
+            name: trimmedTaskName,
+            cost: Number(cost),
             deadline,
             order,
         };
@@ -51,6 +56,7 @@ export default function Dashboard() {
         setTaskName("");
         setCost("");
         setDeadline("");
+        textInput.current.focus()
     };
 
     const handleDeleteTask = async () => {
@@ -66,6 +72,7 @@ export default function Dashboard() {
                         await updateTask(task.id, { order: newOrder });
                     }
                 });
+                textInput.current.focus()
                 setTaskToDelete(null);
                 return sortedTasks
             } catch (error) {
@@ -90,6 +97,7 @@ export default function Dashboard() {
 
         setTasks(reorderedTasks)
         setIsDragging(false);
+        textInput.current.focus()
     };
 
     const onDragStart = () => {
@@ -102,6 +110,14 @@ export default function Dashboard() {
             setUser(user ? user : null);
         });
     }, []);
+
+    useEffect(() => {
+        textInput.current.focus()
+    }, []);
+
+    useEffect(() => {
+        if (taskToDelete || showErrorModal || showTaskExistsModal) modalRef.current.focus()
+    }, [taskToDelete, showErrorModal, showTaskExistsModal]);
 
     const dataAtual = new Date();
     const diaAtual = dataAtual.toLocaleDateString('pt-BR', {
@@ -149,31 +165,37 @@ export default function Dashboard() {
                 </div>
                 <div className="max-lg:flex-col flex w-full border-2 border-primary p-3 bg-white dark:bg-bgBlack lg:space-x-2 rounded-lg justify-between m-1 max-lg:gap-3">
                     <input
-                        className="border border-black dark:bg-white dark:text-primary flex-1 rounded border-none px-2 py-2 focus:outline-none 
-                            focus:border-secondary focus:ring-2 focus:ring-secondary shadow-md"
-                        type="text"
+                        className="dark:bg-white  dark:text-black flex-1 rounded px-2 py-2 shadow-md" type="text"
                         placeholder="Nome da tarefa"
                         value={taskName}
                         onChange={(e) => setTaskName(e.target.value)}
+                        ref={textInput}
                     />
                     <input
-                        onBlur={(e) => (e.target.value < 0 ? setCost(0) : cost)}
-                        min={0}
-                        className="border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-primary
-                            focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary
+                        className="flex-1 rounded px-2 py-2 shadow-md dark:bg-white dark:text-black  border-transparent
                             [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         type="number"
                         placeholder="Custo (R$)"
                         value={cost}
-                        onChange={(e) => setCost(e.target.value)}
+                        onChange={(e) => {
+                            let numbers = e.target.value
+                                .replace(/[^0-9.,]/g, '')
+                            if (numbers > 1000000000) {
+                                numbers = '1000000000'
+                            }
+                            e.target.value = numbers
+                            setCost(e.target.value)
+                        }
+                        }
+                        required
                     />
                     <input
-                        className="border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-black
-                            focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary"
+                        className="w-full flex-1 rounded border-transparent px-2 py-2 shadow-md dark:bg-white dark:text-black"
                         type="date"
                         placeholder="Data limite"
                         value={deadline}
                         onChange={(e) => setDeadline(e.target.value)}
+                        required
                     />
                     <button onClick={storeTask} className="flex-1 dark:bg-white dark:text-black shadow-md hover:text-white hover:bg-accent dark:hover:bg-accent rounded transition-all duration-300 max-lg:py-2">
                         Adicionar Tarefa
@@ -196,6 +218,8 @@ export default function Dashboard() {
                                             task={task}
                                             tasks={tasks}
                                             setTaskToDelete={setTaskToDelete}
+                                            setShowErrorModal={setShowErrorModal}
+                                            setShowTaskExistsModal={setShowTaskExistsModal}
                                         />
                                     ))}
                                     {provided.placeholder}
@@ -213,9 +237,9 @@ export default function Dashboard() {
                     <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                         <div className="bg-white p-4 rounded shadow-lg text-black">
                             <h2>Confirmar exclusão de Tarefa</h2>
-                            <p>Tem certeza que deseja excluir a tarefa "{taskToDelete.name}"?</p>
+                            <p>Tem certeza que deseja excluir a tarefa {taskToDelete.name}?</p>
                             <div className="flex space-x-2 mt-4">
-                                <button onClick={handleDeleteTask} className="bg-red-500 text-white px-4 py-2 rounded">
+                                <button ref={modalRef} onClick={handleDeleteTask} className="focus:ring focus:ring-black bg-red-500 text-white px-4 py-2 rounded">
                                     Confirmar
                                 </button>
                                 <button onClick={() => setTaskToDelete(null)} className="bg-gray-300 px-4 py-2 rounded">
@@ -234,7 +258,8 @@ export default function Dashboard() {
                             <div className="flex justify-end mt-4">
                                 <button
                                     onClick={() => setShowErrorModal(false)}
-                                    className="bg-gray-300 px-4 py-2 rounded"
+                                    className="bg-gray-300 px-4 py-2 rounded focus:ring focus:ring-black"
+                                    ref={modalRef}
                                 >
                                     OK
                                 </button>
@@ -251,7 +276,8 @@ export default function Dashboard() {
                             <div className="flex justify-end mt-4">
                                 <button
                                     onClick={() => setShowTaskExistsModal(false)}
-                                    className="bg-gray-300 px-4 py-2 rounded"
+                                    className="bg-gray-300 px-4 py-2 rounded focus:ring focus:ring-black"
+                                    ref={modalRef}
                                 >
                                     OK
                                 </button>

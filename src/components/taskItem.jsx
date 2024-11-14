@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import { Draggable } from "@hello-pangea/dnd";
 import { useTasks } from "../hooks/useTasks";
 
-export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
+export default function TaskItem({ task, index, tasks, setTaskToDelete, setShowErrorModal, setShowTaskExistsModal }) {
     const [editingTask, setEditingTask] = useState(null);
     const [editingTaskName, setEditingTaskName] = useState("");
     const [editingCost, setEditingCost] = useState("");
     const [editingDeadline, setEditingDeadline] = useState("");
 
     const { updateTask } = useTasks();
+
+    const textInput = useRef(null)
 
     const startEditing = (taskToEdit) => {
         setEditingTask(taskToEdit);
@@ -19,24 +21,28 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
     };
 
     const updateInputTask = async () => {
-        if (!editingTaskName.trim()) {
-            alert("A tarefa precisa de um nome.");
+        const trimmedTaskName = editingTaskName.trimEnd();
+
+        if (!trimmedTaskName || !editingCost) {
+            setShowErrorModal(true);
             return;
         }
 
-        const taskExists = tasks.some(
-            (t) => t.name === editingTaskName && t.id !== editingTask.id
-        );
+        const taskExists = tasks.some((t) => t.name === trimmedTaskName);
+        if (taskExists) {
+            setShowTaskExistsModal(true);
+            return;
+        }
 
         if (taskExists) {
-            alert("Essa tarefa já existe.");
+            setShowTaskExistsModal(true);
             return;
         }
 
         const taskInput = {
             id: editingTask.id,
-            name: editingTaskName,
-            cost: parseFloat(editingCost),
+            name: trimmedTaskName,
+            cost: (editingCost),
             deadline: editingDeadline,
             order: task.order,
         };
@@ -48,6 +54,21 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
         setEditingCost("");
         setEditingDeadline("");
     };
+
+    function formatCost(value) {
+        if (!value) return ''
+        return (
+            new Intl.NumberFormat("pt-BR", {
+                style: "currency",
+                currency: "BRL",
+            }).format(value)
+        )
+    }
+
+    useEffect(() => {
+        if (editingTask) textInput.current.focus()
+    }, [editingTask])
+
 
     return (
         <Draggable draggableId={task.id} index={index}>
@@ -61,29 +82,41 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                     {editingTask && editingTask.id === task.id ? (
                         <div className="flex gap-2 p-3">
                             <input
-                                className="border border-black dark:bg-white dark:text-primary flex-1 rounded border-none px-2 py-2 focus:outline-none 
-                                focus:border-secondary focus:ring-2 focus:ring-secondary shadow-md"
+                                className="border border-black flex-1 rounded  px-2 py-2 shadow-md dark:bg-white dark:text-black
+                                "
                                 type="text"
                                 placeholder="Nome da tarefa"
                                 value={editingTaskName}
                                 onChange={(e) => setEditingTaskName(e.target.value)}
+                                required
+                                ref={textInput}
                             />
                             <input
-                                className="border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-primary
-                                focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary
+                                className="border border-black flex-1 rounded  px-2 py-2 shadow-md dark:bg-white dark:text-black
                                 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 type="number"
                                 placeholder="Custo (R$)"
                                 value={editingCost}
-                                onChange={(e) => setEditingCost(e.target.value)}
+                                onChange={(e) => {
+                                    let numbers = e.target.value
+                                        .replace(/[^0-9.,]/g, '')
+                                    if (numbers > 1000000000) {
+                                        numbers = '1000000000'
+                                    }
+                                    e.target.value = numbers
+                                    setEditingCost(e.target.value)
+                                }
+                                }
+                                required
                             />
                             <input
-                                className="border border-black flex-1 rounded border-none px-2 py-2 shadow-md dark:bg-white dark:text-black
-                                focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary"
+                                className="border border-black flex-1 rounded  px-2 py-2 shadow-md dark:bg-white dark:text-black
+                                "
                                 type="date"
                                 placeholder="Data limite"
                                 value={editingDeadline}
                                 onChange={(e) => setEditingDeadline(e.target.value)}
+                                required
                             />
                             <button
                                 onClick={updateInputTask}
@@ -99,19 +132,21 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete }) {
                             </button>
                         </div>
                     ) : (
-                        <div className="flex gap-14 h-16 items-center max-lg:h-12 max-lg:py-1">
-                            <h3 className="max-lg:text-sm lg:line-clamp-2 flex-1 max-lg:min-w-full max-lg:h-full max-lg:flex max-lg:items-center max-lg:justify-center"><span className="max-lg:line-clamp-2 max-lg:text-center">{task.name}</span></h3>
-                            <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:hidden`}>Custo: R$ {task.cost}</p>
-                            <p className="flex-1 max-lg:hidden">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
+                        <div className="flex max-lg:flex-col lg:gap-14 h-16 items-center max-lg:h-32 max-lg:py-1">
+                            <p className="flex-1 max-lg:hidden max-lg:text-sm">{task.id}</p>
+                            <h3 className="max-lg:text-sm lg:line-clamp-2 flex-1 max-lg:min-w-full max-lg:h-full max-lg:flex max-lg:items-center max-lg:justify-center max-lg:p-2"><span className="max-lg:line-clamp-2 max-lg:text-center">{task.name}</span></h3>
+                            <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:text-sm`}>Custo: {formatCost(task.cost)}</p>
+                            <p className="flex-1 max-lg:hidden max-lg:text-sm">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                             {/* <p className="flex-1">Ordem de apresentação: {task.order}</p> */}
                             <div className="flex gap-2">
-                                <button className={`${task.cost >= 1000 ? "hover:text-black hover:bg-white dark:hover:text-black" : "hover:text-white"} rounded max-lg:hidden p-2 hover:bg-accent duration-200 `} onClick={() => startEditing(task)}><Icon className="text-3xl" icon="material-symbols:edit-square-outline-rounded" /></button>
-                                <button className="p-2 hover:bg-red-600 duration-200 rounded hover:text-white max-lg:hidden" onClick={() => setTaskToDelete(task)}><Icon className="text-3xl" icon="material-symbols:delete-outline" /></button>
+                                <button className={`${task.cost >= 1000 ? "hover:text-black hover:bg-white dark:hover:text-black" : "hover:text-white"} rounded max-lg:hidden  p-2 hover:bg-accent duration-200 `} onClick={() => startEditing(task)}><Icon className="max-lg:text-xl text-3xl" icon="material-symbols:edit-square-outline-rounded" /></button>
+                                <button className="p-2 hover:bg-red-600 duration-200 rounded hover:text-white max-lg:" onClick={() => setTaskToDelete(task)}><Icon className="text-3xl max-lg:text-xl " icon="material-symbols:delete-outline" /></button>
                             </div>
                         </div>
                     )}
                 </div>
-            )}
-        </Draggable>
+            )
+            }
+        </Draggable >
     );
 };
