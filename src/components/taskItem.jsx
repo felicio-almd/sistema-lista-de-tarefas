@@ -28,7 +28,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete, setShowE
             return;
         }
 
-        const taskExists = tasks.some((t) => t.name === trimmedTaskName);
+        const taskExists = tasks.some((t) => t.name === trimmedTaskName && t.id !== editingTask.id);
         if (taskExists) {
             setShowTaskExistsModal(true);
             return;
@@ -133,7 +133,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete, setShowE
                         </div>
                     ) : (
                         <div className="flex max-lg:flex-col lg:gap-14 h-16 items-center max-lg:h-32 max-lg:py-1">
-                            <p className="flex-1 max-lg:hidden max-lg:text-sm">{task.id}</p>
+                            <p className="flex-2 max-lg:hidden max-lg:text-sm">{task.id}</p>
                             <h3 className="max-lg:text-sm lg:line-clamp-2 flex-1 max-lg:min-w-full max-lg:h-full max-lg:flex max-lg:items-center max-lg:justify-center max-lg:p-2"><span className="max-lg:line-clamp-2 max-lg:text-center">{task.name}</span></h3>
                             <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:text-sm`}>Custo: {formatCost(task.cost)}</p>
                             <p className="flex-1 max-lg:hidden max-lg:text-sm">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
