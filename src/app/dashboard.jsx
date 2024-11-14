@@ -211,7 +211,6 @@ export default function Dashboard() {
                         <p className="flex  w-[100px] justify-center">Ações</p>
                     </div>
 
-
                     {tasks.length > 0 ? (<DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                         <Droppable droppableId="tasks" type="list" direction="vertical">
                             {(provided) => (
