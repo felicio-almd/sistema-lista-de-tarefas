@@ -51,7 +51,7 @@ export function TasksProvider({ children }) {
             });
 
             const newTask = {
-                id: newId,
+                id: newId.toString(),
                 ...taskInput,
                 createdAt: new Date().toISOString(),
             };
