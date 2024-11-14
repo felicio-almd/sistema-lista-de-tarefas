@@ -203,6 +203,15 @@ export default function Dashboard() {
                 </div>
 
                 <div className="mt-4 w-full">
+                    <div className="flex max-lg:hidden max-lg:flex-col lg:gap-14 h-10 items-center max-lg:h-32 max-lg:py-1 px-6">
+                        <p className="flex-2  justify-center">ID</p>
+                        <h3 className=" lg:line-clamp-2 flex-1  max-lg:min-w-full max-lg:h-full max-lg:flex max-lg:items-center max-lg:justify-center max-lg:p-2"><span className="max-lg:line-clamp-2 max-lg:text-center">Nome</span></h3>
+                        <p className="flex-1 ">Custo</p>
+                        <p className="flex-1 ">Data limite</p>
+                        <p className="flex  w-[100px] justify-center">Ações</p>
+                    </div>
+
+
                     {tasks.length > 0 ? (<DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                         <Droppable droppableId="tasks" type="list" direction="vertical">
                             {(provided) => (
@@ -233,60 +242,66 @@ export default function Dashboard() {
                 </div>
 
                 {/* Modals */}
-                {taskToDelete && (
-                    <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-4 rounded shadow-lg text-black">
-                            <h2>Confirmar exclusão de Tarefa</h2>
-                            <p>Tem certeza que deseja excluir a tarefa {taskToDelete.name}?</p>
-                            <div className="flex space-x-2 mt-4">
-                                <button ref={modalRef} onClick={handleDeleteTask} className="focus:ring focus:ring-black bg-red-500 text-white px-4 py-2 rounded">
-                                    Confirmar
-                                </button>
-                                <button onClick={() => setTaskToDelete(null)} className="bg-gray-300 px-4 py-2 rounded">
-                                    Cancelar
-                                </button>
+                {
+                    taskToDelete && (
+                        <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="bg-white p-4 rounded shadow-lg text-black">
+                                <h2>Confirmar exclusão de Tarefa</h2>
+                                <p>Tem certeza que deseja excluir a tarefa {taskToDelete.name}?</p>
+                                <div className="flex space-x-2 mt-4">
+                                    <button ref={modalRef} onClick={handleDeleteTask} className="focus:ring focus:ring-black bg-red-500 text-white px-4 py-2 rounded">
+                                        Confirmar
+                                    </button>
+                                    <button onClick={() => setTaskToDelete(null)} className="bg-gray-300 px-4 py-2 rounded">
+                                        Cancelar
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
-                {showErrorModal && (
-                    <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-4 rounded shadow-lg text-black">
-                            <h2>Erro ao criar tarefa</h2>
-                            <p>Preencha todos os campos obrigatórios antes de continuar.</p>
-                            <div className="flex justify-end mt-4">
-                                <button
-                                    onClick={() => setShowErrorModal(false)}
-                                    className="bg-gray-300 px-4 py-2 rounded focus:ring focus:ring-black"
-                                    ref={modalRef}
-                                >
-                                    OK
-                                </button>
+                {
+                    showErrorModal && (
+                        <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="bg-white p-4 rounded shadow-lg text-black">
+                                <h2>Erro ao criar tarefa</h2>
+                                <p>Preencha todos os campos obrigatórios antes de continuar.</p>
+                                <div className="flex justify-end mt-4">
+                                    <button
+                                        onClick={() => setShowErrorModal(false)}
+                                        className="bg-gray-300 px-4 py-2 rounded focus:ring focus:ring-black"
+                                        ref={modalRef}
+                                    >
+                                        OK
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
-                {showTaskExistsModal && (
-                    <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-4 rounded shadow-lg text-black">
-                            <h2>Tarefa já existe</h2>
-                            <p>Uma tarefa com esse nome já foi criada. Por favor, escolha um nome diferente.</p>
-                            <div className="flex justify-end mt-4">
-                                <button
-                                    onClick={() => setShowTaskExistsModal(false)}
-                                    className="bg-gray-300 px-4 py-2 rounded focus:ring focus:ring-black"
-                                    ref={modalRef}
-                                >
-                                    OK
-                                </button>
+                {
+                    showTaskExistsModal && (
+                        <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <div className="bg-white p-4 rounded shadow-lg text-black">
+                                <h2>Tarefa já existe</h2>
+                                <p>Uma tarefa com esse nome já foi criada. Por favor, escolha um nome diferente.</p>
+                                <div className="flex justify-end mt-4">
+                                    <button
+                                        onClick={() => setShowTaskExistsModal(false)}
+                                        className="bg-gray-300 px-4 py-2 rounded focus:ring focus:ring-black"
+                                        ref={modalRef}
+                                    >
+                                        OK
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
-            </main>
+                    )
+                }
+            </main >
             <Footer />
-        </div>
+        </div >
     );
 }
