@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, writeBatch } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, writeBatch, setDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import { useAuthContext } from "../context/AuthContext";
 
@@ -31,20 +31,37 @@ export function TasksProvider({ children }) {
 
         try {
             const userTasksRef = collection(firestore, "users", userAuth.uid, "tasks");
-            const docRef = await addDoc(userTasksRef, {
+
+            const querySnapshot = await getDocs(userTasksRef);
+            let maxId = 0;
+
+            querySnapshot.forEach((doc) => {
+                const docId = parseInt(doc.id, 10);
+                if (!isNaN(docId) && docId > maxId) {
+                    maxId = docId;
+                }
+            });
+
+            const newId = maxId + 1;
+
+            const docRef = doc(userTasksRef, newId.toString());
+            await setDoc(docRef, {
                 ...taskInput,
                 createdAt: new Date().toISOString(),
             });
+
             const newTask = {
-                id: docRef.id,
+                id: newId,
                 ...taskInput,
                 createdAt: new Date().toISOString(),
             };
+
             setTasks([...tasks, newTask]);
         } catch (error) {
-            console.error("Error creating task:", error);
+            console.error("Erro criando task:", error);
         }
     }
+
 
     async function deleteTask(id) {
         if (!userAuth) return;
@@ -54,7 +71,7 @@ export function TasksProvider({ children }) {
             await deleteDoc(taskDocRef);
             setTasks(tasks.filter(task => task.id !== id));
         } catch (error) {
-            console.error("Error deleting task:", error);
+            console.error("Erro ao deletar task:", error);
         }
     }
 
