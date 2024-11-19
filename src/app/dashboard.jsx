@@ -46,7 +46,7 @@ export default function Dashboard() {
 
         const taskInput = {
             name: trimmedTaskName,
-            cost: Number(cost),
+            cost: cost,
             deadline,
             order,
         };
@@ -174,15 +174,13 @@ export default function Dashboard() {
                     <input
                         className="flex-1 rounded px-2 py-2 shadow-md dark:bg-white dark:text-black  border-transparent
                             [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                        type="number"
+                        type="text"
+                        maxLength={20}
                         placeholder="Custo (R$)"
                         value={cost}
                         onChange={(e) => {
                             let numbers = e.target.value
                                 .replace(/[^0-9.,]/g, '')
-                            if (numbers > 1000000000) {
-                                numbers = '1000000000'
-                            }
                             e.target.value = numbers
                             setCost(e.target.value)
                         }

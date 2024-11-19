@@ -42,7 +42,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete, setShowE
         const taskInput = {
             id: editingTask.id,
             name: trimmedTaskName,
-            cost: (editingCost),
+            cost: editingCost,
             deadline: editingDeadline,
             order: task.order,
         };
@@ -82,8 +82,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete, setShowE
                     {editingTask && editingTask.id === task.id ? (
                         <div className="flex gap-2 p-3">
                             <input
-                                className="border border-black flex-1 rounded  px-2 py-2 shadow-md dark:bg-white dark:text-black
-                                "
+                                className="border border-black xl:flex-1 lg:w-[30%] rounded px-2 py-2 shadow-md dark:bg-white dark:text-black"
                                 type="text"
                                 placeholder="Nome da tarefa"
                                 value={editingTaskName}
@@ -92,17 +91,15 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete, setShowE
                                 ref={textInput}
                             />
                             <input
-                                className="border border-black flex-1 rounded  px-2 py-2 shadow-md dark:bg-white dark:text-black
+                                className="border border-black xl:flex-1 lg:w-[30%] rounded  px-2 py-2 shadow-md dark:bg-white dark:text-black
                                 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                type="number"
+                                type="text"
+                                maxLength={20}
                                 placeholder="Custo (R$)"
                                 value={editingCost}
                                 onChange={(e) => {
                                     let numbers = e.target.value
                                         .replace(/[^0-9.,]/g, '')
-                                    if (numbers > 1000000000) {
-                                        numbers = '1000000000'
-                                    }
                                     e.target.value = numbers
                                     setEditingCost(e.target.value)
                                 }
@@ -110,7 +107,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete, setShowE
                                 required
                             />
                             <input
-                                className="border border-black flex-1 rounded  px-2 py-2 shadow-md dark:bg-white dark:text-black
+                                className="border border-black xl:flex-1 lg:w-[30%] rounded  px-2 py-2 shadow-md dark:bg-white dark:text-black
                                 "
                                 type="date"
                                 placeholder="Data limite"
@@ -135,7 +132,7 @@ export default function TaskItem({ task, index, tasks, setTaskToDelete, setShowE
                         <div className="flex max-lg:flex-col lg:gap-14 h-16 items-center max-lg:h-32 max-lg:py-1">
                             <p className="flex-2 max-lg:hidden max-lg:text-sm">{task.id}</p>
                             <h3 className="max-lg:text-sm lg:line-clamp-2 flex-1 max-lg:min-w-full max-lg:h-full max-lg:flex max-lg:items-center max-lg:justify-center max-lg:p-2"><span className="max-lg:line-clamp-2 max-lg:text-center">{task.name}</span></h3>
-                            <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:text-sm`}>Custo: {formatCost(task.cost)}</p>
+                            <p className={`${task.cost >= 1000 ? "font-semibold text-yellow-400" : ""} flex-1 max-lg:text-sm lg:line-clamp-2 max-lg:break-words max-lg:text-center lg:text-xs xl:text-base`}>Custo: {formatCost(task.cost)}</p>
                             <p className="flex-1 max-lg:hidden max-lg:text-sm">Data limite: {new Date(task.deadline).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</p>
                             {/* <p className="flex-1">Ordem de apresentação: {task.order}</p> */}
                             <div className="flex gap-2">
