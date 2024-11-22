@@ -1,5 +1,5 @@
 <div align="center" id="top"> 
-  <img src="./src/app/favicon.ico" alt="Sistema Lista De Tarefas" />
+  <img src="./src/app/favicon.ico" alt="Sistema Lista De Tarefas" width={200}/>
 
   &#xa0;
 
