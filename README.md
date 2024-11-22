@@ -1,5 +1,5 @@
-<div align="center" id="top"> 
-  <img src="./src/app/favicon.ico" alt="Sistema Lista De Tarefas" width={200}/>
+<div align="center" id="top" style="width: 200px; max-width: 100%;"> 
+  <img src="./src/app/favicon.ico" alt="Sistema Lista De Tarefas" style="width: 100%;"/>
 
   &#xa0;
 
@@ -84,7 +84,7 @@ $ npm run dev
 ```
 
 
-Made with :heart: by <a href="https://github.com/felicio-almd" target="_blank">{{YOUR_NAME}}</a>
+Made with :heart: by <a href="https://github.com/felicio-almd" target="_blank">Felicio</a>
 
 &#xa0;
 
