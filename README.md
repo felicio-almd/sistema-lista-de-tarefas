@@ -1,5 +1,4 @@
-<div align="center" id="top" style="width: 200px; max-width: 100%;"> 
-  <img src="./src/app/favicon.ico" alt="Sistema Lista De Tarefas" style="width: 100%;"/>
+<div align="center" id="top"> 
 
   &#xa0;
 
